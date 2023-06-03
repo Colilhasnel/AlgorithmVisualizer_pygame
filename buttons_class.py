@@ -3,42 +3,43 @@ import pygame
 
 pygame.init()
 
-window = pygame.display.set_mode((800,600), pygame.RESIZABLE)
+window = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
 # fps = 60
 # timer = pygame.time.Clock()
-font = pygame.font.Font('freesansbold.ttf', 24)
+font = pygame.font.Font('freesansbold.ttf', 18)
+
 
 class Button:
-    def __init__(self, x_pos, y_pos, text, enabled):
+    def __init__(self, x_pos, y_pos, text, draw_self, enabled):
         self.x_pos = x_pos
         self.y_pos = y_pos
         self.text = text
+        self.rendered_text = font.render(self.text, True, 'black')
+        self.draw_self = draw_self
         self.enabled = enabled
-        self.Draw()
-
-    def get_button_rect(self):
-        this_button_text = font.render(self.text, True, 'black')
-        width , height = pygame.Surface.get_size(this_button_text)
-        width += 6
-        height += 6
-        return pygame.Rect(self.x_pos, self.y_pos, width, height)
+        self.border_color = 'black'
+        self.button_color = 'light gray'
+        self.button_click_color = 'dark gray'
+        if self.draw_self:
+            self.width, self.height = pygame.Surface.get_size(self.rendered_text)
+            self.margin = 5
+            self.width += 2*self.margin
+            self.height += 2*self.margin
+            self.button_rect = pygame.Rect(self.x_pos, self.y_pos, self.width, self.height)
+            self.Draw()
 
     def Draw(self):
-        this_button_text = font.render(self.text, True, 'black')
-        this_button_rect = self.get_button_rect()
         if self.check_click():
-            pygame.draw.rect(window, 'dark gray', this_button_rect, 0, 5)
+            pygame.draw.rect(window, self.button_click_color, self.button_rect, 0, 5)
         else:
-            pygame.draw.rect(window, 'light gray', this_button_rect, 0 ,5)
-        pygame.draw.rect(window, 'black', this_button_rect, 2, 5)
-        window.blit(this_button_text, (self.x_pos + 3, self.y_pos + 3))
+            pygame.draw.rect(window, self.button_color, self.button_rect, 0, 5)
+        pygame.draw.rect(window, self.border_color, self.button_rect, 2, 5)
+        window.blit(self.rendered_text, (self.x_pos + self.margin, self.y_pos + self.margin))
 
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
         left_click = pygame.mouse.get_pressed()[0]
-        buttton_rect = self.get_button_rect()
-        if left_click and buttton_rect.collidepoint(mouse_pos) and self.enabled:
+        if left_click and self.button_rect.collidepoint(mouse_pos) and self.enabled:
             return True
         else:
             return False
-
