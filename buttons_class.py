@@ -3,7 +3,7 @@ import pygame
 
 pygame.init()
 
-window = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
+window = pygame.display.set_mode((1000, 600), pygame.RESIZABLE)
 # fps = 60
 # timer = pygame.time.Clock()
 font = pygame.font.Font('freesansbold.ttf', 18)
