@@ -1,0 +1,11 @@
+{
+    "python.analysis.typeCheckingMode": "off",
+    "actionButtons": {
+        "commands": [{
+            "cwd": "${workspaceFolder}",
+            "name": "Run python3",
+            "command": "python3 ${file}"
+        }
+        ]
+    }
+}
