@@ -7,7 +7,7 @@ pygame.init()
 
 
 class global_information:
-    fps = 60
+    fps = 120
     window_height = 550
     window_width = 1000
     state = "Pause"
@@ -15,6 +15,8 @@ class global_information:
     margins = 5*window_width/100
     selection = "Bubble Sort"
     screen = "Main"
+    algorithm = None #selected algorithm function
+    algorithm_object = None #generator object
     def __init__(self, data_len):
         self.window = pygame.display.set_mode((1000, 600), pygame.RESIZABLE)
         pygame.display.set_caption("Algorithm Visualizer")
@@ -31,6 +33,7 @@ class global_information:
         self.bar_gap = self.bar_width
         for i, num in enumerate(self.data_array):
             self.data_array[i] = [num, 'white']
+        self.sorted = False
 
     def draw_data(self, j = None):
         if (j == None):
@@ -99,7 +102,6 @@ def main_screen(global_info):
     if pause_button.check_click():
         global_info.state = "Pause"
     if reset_button.check_click():
-        global_info.generate_list()
         global_info.state = "Reset"
 
     if menu_button.check_click():
@@ -133,22 +135,31 @@ def menu_screen(global_info):
     elif bubble_sort_button.check_click():
         global_info.screen = "Main"
         global_info.selection = "Bubble Sort"
+        global_info.algorithm = display_algorithms.bubble_sort
+        global_info.state = "Reset"
     elif insertion_sort_button.check_click():
         global_info.screen = "Main"
         global_info.selection = "Insertion Sort"
+        global_info.state = "Reset"
+        global_info.algorithm = display_algorithms.insertion_sort
     elif merge_sort_button.check_click():
         global_info.screen = "Main"
         global_info.selection = "Merge Sort"
+        global_info.algorithm = display_algorithms.merge_sort
+        global_info.state = "Reset"
     elif quick_sort_button.check_click():
         global_info.screen = "Main"
         global_info.selection = "Quick Sort"
+        global_info.algorithm = display_algorithms.quick_sort
+        global_info.state = "Reset"
 
 
 def main():
 
-    global_info = global_information(100)
+    global_info = global_information(200)
     running = True
-    bubble_sort_obj = display_algorithms.bubble_sort(global_info)
+    global_info.algorithm = display_algorithms.bubble_sort
+    global_info.algorithm_object = global_info.algorithm(global_info)
     while running:
         global_info.window.fill('black')
         global_info.timer.tick(global_info.fps)
@@ -159,11 +170,11 @@ def main():
             main_screen(global_info)
             global_info.draw_data()
             if global_info.state == "Reset":
-                bubble_sort_obj = display_algorithms.bubble_sort(global_info)
+                global_info.generate_list()
+                global_info.algorithm_object = global_info.algorithm(global_info)
                 global_info.state = "Pause"
             if global_info.state == "Play" and not global_info.sorted:
-                if global_info.selection == "Bubble Sort":
-                    global_info.data_array = next(bubble_sort_obj)
+                next(global_info.algorithm_object)
 
 
         for event in pygame.event.get():

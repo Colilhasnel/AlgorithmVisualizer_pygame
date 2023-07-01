@@ -1,18 +1,44 @@
 def bubble_sort(global_info):
     n = global_info.data_size
-    lst = global_info.data_array
-    for i in range(0,n-1):
+    for i in range(0, n-1):
         for j in range(0, n-i-1):
-            lst[j][1] = 'red'
+            global_info.data_array[j][1] = 'red'
             global_info.draw_data(j)
-            if (lst[j][0] > lst[j+1][0]):
-                lst[j], lst[j+1] = lst[j+1], lst[j]
-            lst[j][1] = 'white'
-            yield lst
-        lst[n-i-1][1] = 'green'
-    lst[0][1] = 'green'
+            if (global_info.data_array[j][0] > global_info.data_array[j+1][0]):
+                global_info.data_array[j], global_info.data_array[j +
+                                                                  1] = global_info.data_array[j+1], global_info.data_array[j]
+            yield True
+            global_info.data_array[j][1] = 'white'
+        global_info.data_array[n-i-1][1] = 'green'
+    global_info.data_array[0][1] = 'green'
     global_info.sorted = True
-    yield lst
+    yield True
+
 
 def insertion_sort(global_info):
-    
+    n = global_info.data_size
+    global_info.data_array[0][1] = 'grey'
+    for i in range(1, n):
+        global_info.data_array[i][1] = 'red'
+        curr = global_info.data_array[i]
+        j = i-1
+        while ((global_info.data_array[j][0] > curr[0]) & (j >= 0)):
+            global_info.data_array[j+1] = global_info.data_array[j]
+            global_info.data_array[j] = curr
+            j = j-1
+            yield True
+        global_info.data_array[j+1][1] = 'grey'
+    for i in range(0,n):
+        global_info.data_array[i][1] = 'green'
+        yield True
+    global_info.sorted = True
+    yield True
+
+def quick_sort(global_info):
+    global_info.sorted = True
+    yield True
+
+
+def merge_sort(global_info):
+    global_info.sorted = True
+    yield True
