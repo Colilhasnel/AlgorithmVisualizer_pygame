@@ -15,8 +15,9 @@ class global_information:
     margins = 5*window_width/100
     selection = "Bubble Sort"
     screen = "Main"
-    algorithm = None #selected algorithm function
-    algorithm_object = None #generator object
+    algorithm = None  # selected algorithm function
+    algorithm_object = None  # generator object
+
     def __init__(self, data_len):
         self.window = pygame.display.set_mode((1000, 600), pygame.RESIZABLE)
         pygame.display.set_caption("Algorithm Visualizer")
@@ -35,7 +36,7 @@ class global_information:
             self.data_array[i] = [num, 'white']
         self.sorted = False
 
-    def draw_data(self, j = None):
+    def draw_data(self, j=None):
         if (j == None):
             for index, element in enumerate(self.data_array):
                 x = self.margins + index * \
@@ -48,10 +49,16 @@ class global_information:
             element = self.data_array[j]
             x = self.margins + index * \
                 (self.bar_width + self.bar_gap)
+            # y = self.window_height - self.margins - 450
+            # rect = pygame.Rect(x,y,self.bar_width, 450)
+            # pygame.draw.rect(self.window, 'black', rect)
             y = self.window_height - self.margins - element[0]
             rect = pygame.Rect(x, y, self.bar_width, element[0])
             pygame.draw.rect(self.window, element[1], rect)
         pygame.display.update()
+
+    def random_gen(self,x,y):
+        return random.randrange(x,y)
 
 
 class Select_Algorithm:
@@ -156,7 +163,7 @@ def menu_screen(global_info):
 
 def main():
 
-    global_info = global_information(200)
+    global_info = global_information(449)
     running = True
     global_info.algorithm = display_algorithms.bubble_sort
     global_info.algorithm_object = global_info.algorithm(global_info)
@@ -171,11 +178,11 @@ def main():
             global_info.draw_data()
             if global_info.state == "Reset":
                 global_info.generate_list()
-                global_info.algorithm_object = global_info.algorithm(global_info)
+                global_info.algorithm_object = global_info.algorithm(
+                    global_info)
                 global_info.state = "Pause"
             if global_info.state == "Play" and not global_info.sorted:
                 next(global_info.algorithm_object)
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
