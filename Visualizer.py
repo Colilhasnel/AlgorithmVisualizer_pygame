@@ -13,7 +13,7 @@ class global_information:
     state = "Pause"
     sorted = False
     margins = 5*window_width/100
-    selection = "Bubble Sort"
+    selection = "Merge Sort"
     screen = "Main"
     algorithm = None  # selected algorithm function
     algorithm_object = None  # generator object
@@ -165,7 +165,7 @@ def main():
 
     global_info = global_information(449)
     running = True
-    global_info.algorithm = display_algorithms.bubble_sort
+    global_info.algorithm = display_algorithms.merge_sort
     global_info.algorithm_object = global_info.algorithm(global_info)
     while running:
         global_info.window.fill('black')
