@@ -61,8 +61,8 @@ class global_information:
         return random.randrange(x,y)
 
 
-class Select_Algorithm:
-    def __init__(self, global_info, number, text):
+class select_algorithm_button:
+    def __init__(self, global_info, number, text, function_object):
         self.select_button = buttons_class.Button(
             global_info, 0, number*36, text, False, True)
         self.select_button.width = 200
@@ -70,6 +70,7 @@ class Select_Algorithm:
         self.select_button.margin = 10
         self.select_button.button_rect = pygame.Rect(
             self.select_button.x_pos, self.select_button.y_pos, self.select_button.width, self.select_button.height)
+        self.function = function_object
         self.select_button.Draw(global_info)
 
     def check_click(self):
@@ -126,10 +127,16 @@ def menu_screen(global_info):
                      pygame.Rect(0, 1, 199, 34), 2, 3)
     heading = global_info.font1.render("Select Algorithm", True, 'white')
     global_info.window.blit(heading, (4, 9))
-    bubble_sort_button = Select_Algorithm(global_info, 1, "Bubble Sort")
-    insertion_sort_button = Select_Algorithm(global_info, 2, "Insertion Sort")
-    merge_sort_button = Select_Algorithm(global_info, 3, "Merge Sort")
-    quick_sort_button = Select_Algorithm(global_info, 4, "Quick Sort")
+
+    algorithm_buttons = {}
+
+    algorithm_buttons["Bubble Sort"] = select_algorithm_button(global_info, 1, "Bubble Sort", display_algorithms.bubble_sort)
+    algorithm_buttons["Insertion Sort"] = select_algorithm_button(global_info, 2, "Insertion Sort",display_algorithms.insertion_sort)
+    algorithm_buttons["Merge Sort"] = select_algorithm_button(global_info, 3, "Merge Sort",display_algorithms.merge_sort)
+    algorithm_buttons["Quick Sort"] = select_algorithm_button(global_info, 4, "Quick Sort",display_algorithms.quick_sort)
+    algorithm_buttons["Selection Sort"] = select_algorithm_button(global_info, 5, "Selection Sort",display_algorithms.selection_sort)
+    algorithm_buttons["Radix Sort"] = select_algorithm_button(global_info, 6, "Radix Sort", display_algorithms.radix_sort)
+    
 
     pygame.draw.rect(global_info.window, 'white',
                      pygame.Rect(201, 1, 799, 34), 2, 10)
@@ -139,31 +146,19 @@ def menu_screen(global_info):
 
     if menu_button.check_click():
         global_info.screen = "Main"
-    elif bubble_sort_button.check_click():
-        global_info.screen = "Main"
-        global_info.selection = "Bubble Sort"
-        global_info.algorithm = display_algorithms.bubble_sort
-        global_info.state = "Reset"
-    elif insertion_sort_button.check_click():
-        global_info.screen = "Main"
-        global_info.selection = "Insertion Sort"
-        global_info.state = "Reset"
-        global_info.algorithm = display_algorithms.insertion_sort
-    elif merge_sort_button.check_click():
-        global_info.screen = "Main"
-        global_info.selection = "Merge Sort"
-        global_info.algorithm = display_algorithms.merge_sort
-        global_info.state = "Reset"
-    elif quick_sort_button.check_click():
-        global_info.screen = "Main"
-        global_info.selection = "Quick Sort"
-        global_info.algorithm = display_algorithms.quick_sort
-        global_info.state = "Reset"
+        return
+    
+    for key,value in algorithm_buttons.items():
+        if value.check_click():
+            global_info.screen = "Main"
+            global_info.selection = key
+            global_info.algorithm = value.function
+            global_info.state = "Reset"
 
 
 def main():
 
-    global_info = global_information(449)
+    global_info = global_information(100)
     running = True
     global_info.algorithm = display_algorithms.merge_sort
     global_info.algorithm_object = global_info.algorithm(global_info)
