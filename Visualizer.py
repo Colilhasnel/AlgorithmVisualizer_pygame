@@ -5,6 +5,9 @@ import display_algorithms
 
 pygame.init()
 
+MARGIN_TOP = 20
+MARGIN_LEFT = 210
+MARGIN_RIGHT = 20
 
 class global_information:
     fps = 120
@@ -12,9 +15,7 @@ class global_information:
     window_width = 1000
     state = "Pause"
     sorted = False
-    margins = 5*window_width/100
-    selection = "Merge Sort"
-    screen = "Main"
+    selection = "Merge Sort"  # Algorithm text
     algorithm = None  # selected algorithm function
     algorithm_object = None  # generator object
 
@@ -29,7 +30,7 @@ class global_information:
     def generate_list(self):
         self.data_array = random.sample(range(1, 450), self.data_size)
         self.max_height = max(self.data_array)
-        self.bar_width = (self.window_width - 2*self.margins) / \
+        self.bar_width = (self.window_width - MARGIN_LEFT - MARGIN_RIGHT) / \
             (2*len(self.data_array)-1)
         self.bar_gap = self.bar_width
         for i, num in enumerate(self.data_array):
@@ -39,26 +40,26 @@ class global_information:
     def draw_data(self, j=None):
         if (j == None):
             for index, element in enumerate(self.data_array):
-                x = self.margins + index * \
+                x = MARGIN_LEFT + index * \
                     (self.bar_width + self.bar_gap)
-                y = self.window_height - self.margins - element[0]
+                y = self.window_height - MARGIN_TOP - element[0]
                 rect = pygame.Rect(x, y, self.bar_width, element[0])
                 pygame.draw.rect(self.window, element[1], rect)
         else:
             index = j
             element = self.data_array[j]
-            x = self.margins + index * \
+            x = MARGIN_LEFT + index * \
                 (self.bar_width + self.bar_gap)
             # y = self.window_height - self.margins - 450
             # rect = pygame.Rect(x,y,self.bar_width, 450)
             # pygame.draw.rect(self.window, 'black', rect)
-            y = self.window_height - self.margins - element[0]
+            y = self.window_height - MARGIN_TOP - element[0]
             rect = pygame.Rect(x, y, self.bar_width, element[0])
             pygame.draw.rect(self.window, element[1], rect)
         pygame.display.update()
 
-    def random_gen(self,x,y):
-        return random.randrange(x,y)
+    def random_gen(self, x, y):
+        return random.randrange(x, y)
 
 
 class select_algorithm_button:
@@ -77,26 +78,22 @@ class select_algorithm_button:
         return self.select_button.check_click()
 
 
-def main_screen(global_info):
+def static_screen(global_info):
     menu_button = buttons_class.Button(global_info, 0, 1, "", False, True)
     menu_button.button_rect = pygame.Rect(0, 1, 130, 34)
 
-    pygame.draw.rect(global_info.window, 'white',
-                     menu_button.button_rect, 2, 3)
-    pygame.draw.rect(global_info.window, 'white', pygame.Rect(
-        5, 10, 30, 4), border_radius=3)
-    pygame.draw.rect(global_info.window, 'white', pygame.Rect(
-        5, 16, 30, 4), border_radius=3)
-    pygame.draw.rect(global_info.window, 'white', pygame.Rect(
-        5, 22, 30, 4), border_radius=3)
-    heading = global_info.font1.render("Menu", True, 'white')
-    global_info.window.blit(heading, (47, 9))
+    pygame.draw.rect(global_info.window, 'white', pygame.Rect(5, 1, 200, 34), 2, 10)
+
+    text_1 = global_info.font1.render("Algorithms", True, 'white')
+    global_info.window.blit(text_1, (47, 9))
 
     pygame.draw.rect(global_info.window, 'white',
-                     pygame.Rect(132, 1, 868, 34), 2, 10)
-    heading2 = global_info.font1.render(
+                     pygame.Rect(MARGIN_LEFT, 1, global_info.window_width - MARGIN_LEFT, 34), 2, 10)
+    heading = global_info.font1.render(
         "Selected Algorithm : " + global_info.selection, True, 'white')
-    global_info.window.blit(heading2, (370, 9))
+    global_info.window.blit(heading, (370, 9))
+
+    algorithms_menu(global_info)
 
     play_button = buttons_class.Button(
         global_info, 410, 550, "Play", True, True)
@@ -112,45 +109,26 @@ def main_screen(global_info):
     if reset_button.check_click():
         global_info.state = "Reset"
 
-    if menu_button.check_click():
-        global_info.screen = "Menu"
 
-
-def menu_screen(global_info):
-    menu_button = buttons_class.Button(global_info, 158, 1, "", False, True)
-    menu_button.button_rect = pygame.Rect(158, 1, 41, 34)
-    pygame.draw.rect(global_info.window, 'white',
-                     menu_button.button_rect, 2, 3)
-    pygame.draw.line(global_info.window, 'white', (166, 9), (190, 27), 3)
-    pygame.draw.line(global_info.window, 'white', (190, 9), (166, 27), 3)
-    pygame.draw.rect(global_info.window, 'white',
-                     pygame.Rect(0, 1, 199, 34), 2, 3)
-    heading = global_info.font1.render("Select Algorithm", True, 'white')
-    global_info.window.blit(heading, (4, 9))
+def algorithms_menu(global_info):
 
     algorithm_buttons = {}
 
-    algorithm_buttons["Bubble Sort"] = select_algorithm_button(global_info, 1, "Bubble Sort", display_algorithms.bubble_sort)
-    algorithm_buttons["Insertion Sort"] = select_algorithm_button(global_info, 2, "Insertion Sort",display_algorithms.insertion_sort)
-    algorithm_buttons["Merge Sort"] = select_algorithm_button(global_info, 3, "Merge Sort",display_algorithms.merge_sort)
-    algorithm_buttons["Quick Sort"] = select_algorithm_button(global_info, 4, "Quick Sort",display_algorithms.quick_sort)
-    algorithm_buttons["Selection Sort"] = select_algorithm_button(global_info, 5, "Selection Sort",display_algorithms.selection_sort)
-    algorithm_buttons["Radix Sort"] = select_algorithm_button(global_info, 6, "Radix Sort", display_algorithms.radix_sort)
-    
+    algorithm_buttons["Bubble Sort"] = select_algorithm_button(
+        global_info, 1, "Bubble Sort", display_algorithms.bubble_sort)
+    algorithm_buttons["Insertion Sort"] = select_algorithm_button(
+        global_info, 2, "Insertion Sort", display_algorithms.insertion_sort)
+    algorithm_buttons["Merge Sort"] = select_algorithm_button(
+        global_info, 3, "Merge Sort", display_algorithms.merge_sort)
+    algorithm_buttons["Quick Sort"] = select_algorithm_button(
+        global_info, 4, "Quick Sort", display_algorithms.quick_sort)
+    algorithm_buttons["Selection Sort"] = select_algorithm_button(
+        global_info, 5, "Selection Sort", display_algorithms.selection_sort)
+    algorithm_buttons["Radix Sort"] = select_algorithm_button(
+        global_info, 6, "Radix Sort", display_algorithms.radix_sort)
 
-    pygame.draw.rect(global_info.window, 'white',
-                     pygame.Rect(201, 1, 799, 34), 2, 10)
-    heading2 = global_info.font1.render(
-        "Selected Algorithm : In progess", True, 'white')
-    global_info.window.blit(heading2, (450, 9))
-
-    if menu_button.check_click():
-        global_info.screen = "Main"
-        return
-    
-    for key,value in algorithm_buttons.items():
+    for key, value in algorithm_buttons.items():
         if value.check_click():
-            global_info.screen = "Main"
             global_info.selection = key
             global_info.algorithm = value.function
             global_info.state = "Reset"
@@ -158,7 +136,7 @@ def menu_screen(global_info):
 
 def main():
 
-    global_info = global_information(100)
+    global_info = global_information(150)
     running = True
     global_info.algorithm = display_algorithms.merge_sort
     global_info.algorithm_object = global_info.algorithm(global_info)
@@ -166,18 +144,16 @@ def main():
         global_info.window.fill('black')
         global_info.timer.tick(global_info.fps)
 
-        if global_info.screen == "Menu":
-            menu_screen(global_info)
-        elif global_info.screen == "Main":
-            main_screen(global_info)
-            global_info.draw_data()
-            if global_info.state == "Reset":
-                global_info.generate_list()
-                global_info.algorithm_object = global_info.algorithm(
-                    global_info)
-                global_info.state = "Pause"
-            if global_info.state == "Play" and not global_info.sorted:
-                next(global_info.algorithm_object)
+        static_screen(global_info)
+
+        global_info.draw_data()
+        if global_info.state == "Reset":
+            global_info.generate_list()
+            global_info.algorithm_object = global_info.algorithm(
+                global_info)
+            global_info.state = "Pause"
+        if global_info.state == "Play" and not global_info.sorted:
+            next(global_info.algorithm_object)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

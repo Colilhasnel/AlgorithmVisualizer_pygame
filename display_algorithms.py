@@ -192,5 +192,50 @@ def selection_sort(global_info):
 
 
 def radix_sort(global_info):
+
+    def counting_sort():
+
+        global exp1
+        exp1 *= 10
+
+        n = global_info.data_size
+
+        output = [0]*(n)
+        count = [0]*(10)
+
+        for i in range(0, n):
+            index = global_info.data_array[i][0] // exp1
+            count[index % 10] += 1
+
+        for i in range(1, 10):
+            count[i] += count[i - 1]
+
+        i = n - 1
+        while i >= 0:
+            index = global_info.data_array[i][0] // exp1
+            output[count[index % 10] - 1] = global_info.data_array[i][0]
+            count[index % 10] -= 1
+            i -= 1
+
+        i = 0
+        for i in range(0, global_info.data_size):
+            global_info.data_array[i][0] = output[i]
+            yield True
+
+    max1= -1
+    for i in global_info.data_array:
+        max1 = max(max1, i[0])
+
+    global exp1
+    exp1 = 1
+    obj1 = counting_sort()
+    while max1 / exp1 >= 1:
+        next(obj1)
+        yield True
+
+    for i in range(0, global_info.data_size):
+        global_info.data_array[i][1] = 'green'
+        yield True
+
     global_info.sorted = True
     yield True
