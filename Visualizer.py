@@ -9,6 +9,7 @@ MARGIN_TOP = 20
 MARGIN_LEFT = 210
 MARGIN_RIGHT = 20
 
+
 class global_information:
     fps = 120
     window_height = 550
@@ -28,13 +29,15 @@ class global_information:
         self.generate_list()
 
     def generate_list(self):
-        self.data_array = random.sample(range(1, 450), self.data_size)
+        step = 450//self.data_size
+        self.data_array = random.sample(range(1, 450, step), self.data_size)
         self.max_height = max(self.data_array)
         self.bar_width = (self.window_width - MARGIN_LEFT - MARGIN_RIGHT) / \
             (2*len(self.data_array)-1)
         self.bar_gap = self.bar_width
-        for i, num in enumerate(self.data_array):
-            self.data_array[i] = [num, 'white']
+        self.colors = []
+        for i in range(0,self.data_size):
+            self.colors.append('white')
         self.sorted = False
 
     def draw_data(self, j=None):
@@ -42,9 +45,9 @@ class global_information:
             for index, element in enumerate(self.data_array):
                 x = MARGIN_LEFT + index * \
                     (self.bar_width + self.bar_gap)
-                y = self.window_height - MARGIN_TOP - element[0]
-                rect = pygame.Rect(x, y, self.bar_width, element[0])
-                pygame.draw.rect(self.window, element[1], rect)
+                y = self.window_height - MARGIN_TOP - element
+                rect = pygame.Rect(x, y, self.bar_width, element)
+                pygame.draw.rect(self.window, self.colors[index], rect)
         else:
             index = j
             element = self.data_array[j]
@@ -53,9 +56,9 @@ class global_information:
             # y = self.window_height - self.margins - 450
             # rect = pygame.Rect(x,y,self.bar_width, 450)
             # pygame.draw.rect(self.window, 'black', rect)
-            y = self.window_height - MARGIN_TOP - element[0]
-            rect = pygame.Rect(x, y, self.bar_width, element[0])
-            pygame.draw.rect(self.window, element[1], rect)
+            y = self.window_height - MARGIN_TOP - element
+            rect = pygame.Rect(x, y, self.bar_width, element)
+            pygame.draw.rect(self.window, self.colors[index], rect)
         pygame.display.update()
 
     def random_gen(self, x, y):
@@ -81,11 +84,6 @@ class select_algorithm_button:
 def static_screen(global_info):
     menu_button = buttons_class.Button(global_info, 0, 1, "", False, True)
     menu_button.button_rect = pygame.Rect(0, 1, 130, 34)
-
-    pygame.draw.rect(global_info.window, 'white', pygame.Rect(5, 1, 200, 34), 2, 10)
-
-    text_1 = global_info.font1.render("Algorithms", True, 'white')
-    global_info.window.blit(text_1, (47, 9))
 
     pygame.draw.rect(global_info.window, 'white',
                      pygame.Rect(MARGIN_LEFT, 1, global_info.window_width - MARGIN_LEFT, 34), 2, 10)
@@ -115,17 +113,17 @@ def algorithms_menu(global_info):
     algorithm_buttons = {}
 
     algorithm_buttons["Bubble Sort"] = select_algorithm_button(
-        global_info, 1, "Bubble Sort", display_algorithms.bubble_sort)
+        global_info, 0, "Bubble Sort", display_algorithms.bubble_sort)
     algorithm_buttons["Insertion Sort"] = select_algorithm_button(
-        global_info, 2, "Insertion Sort", display_algorithms.insertion_sort)
+        global_info, 1, "Insertion Sort", display_algorithms.insertion_sort)
     algorithm_buttons["Merge Sort"] = select_algorithm_button(
-        global_info, 3, "Merge Sort", display_algorithms.merge_sort)
+        global_info, 2, "Merge Sort", display_algorithms.merge_sort)
     algorithm_buttons["Quick Sort"] = select_algorithm_button(
-        global_info, 4, "Quick Sort", display_algorithms.quick_sort)
+        global_info, 3, "Quick Sort", display_algorithms.quick_sort)
     algorithm_buttons["Selection Sort"] = select_algorithm_button(
-        global_info, 5, "Selection Sort", display_algorithms.selection_sort)
+        global_info, 4, "Selection Sort", display_algorithms.selection_sort)
     algorithm_buttons["Radix Sort"] = select_algorithm_button(
-        global_info, 6, "Radix Sort", display_algorithms.radix_sort)
+        global_info, 5, "Radix Sort", display_algorithms.radix_sort)
 
     for key, value in algorithm_buttons.items():
         if value.check_click():

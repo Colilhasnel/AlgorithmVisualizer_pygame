@@ -1,44 +1,45 @@
 def swap(global_info, x, y):
     global_info.data_array[x], global_info.data_array[y] = global_info.data_array[y], global_info.data_array[x]
+    global_info.colors[x], global_info.colors[y] = global_info.colors[y], global_info.colors[x]
 
 
 def bubble_sort(global_info):
     n = global_info.data_size
     for i in range(0, n-1):
         for j in range(0, n-i-1):
-            global_info.data_array[j][1] = 'red'
+            global_info.colors[j] = 'red'
             # global_info.draw_data(j)
-            if (global_info.data_array[j][0] > global_info.data_array[j+1][0]):
+            if (global_info.data_array[j] > global_info.data_array[j+1]):
                 swap(global_info, j, j+1)
-                global_info.data_array[j][1] = 'grey'
+                global_info.colors[j] = 'grey'
             else:
-                global_info.data_array[j][1] = 'yellow'
+                global_info.colors[j] = 'yellow'
             yield True
         for j in range(0, n-i-1):
-            global_info.data_array[j][1] = 'white'
-        global_info.data_array[n-i-1][1] = 'green'
-    global_info.data_array[0][1] = 'green'
+            global_info.colors[j] = 'white'
+        global_info.colors[n-i-1] = 'green'
+    global_info.colors[0] = 'green'
     global_info.sorted = True
     yield True
 
 
 def insertion_sort(global_info):
     n = global_info.data_size
-    global_info.data_array[0][1] = 'grey'
+    global_info.colors[0] = 'grey'
     for i in range(1, n):
-        global_info.data_array[i][1] = 'red'
+        global_info.colors[i] = 'red'
         curr = global_info.data_array[i]
         j = i-1
-        while ((global_info.data_array[j][0] > curr[0]) & (j >= 0)):
+        while ((global_info.data_array[j] > curr) & (j >= 0)):
             global_info.data_array[j+1] = global_info.data_array[j]
             global_info.data_array[j] = curr
             # global_info.draw_data(j)
             # global_info.draw_data(j+1)
             j = j-1
             yield True
-        global_info.data_array[j+1][1] = 'grey'
+        global_info.colors[j+1] = 'grey'
     for i in range(0, n):
-        global_info.data_array[i][1] = 'green'
+        global_info.colors[i] = 'green'
         yield True
     global_info.sorted = True
     yield True
@@ -47,21 +48,21 @@ def insertion_sort(global_info):
 def quick_sort(global_info):
 
     def partition(l, r):
-        global_info.data_array[r][1] = 'red'
-        pivot = global_info.data_array[r][0]
+        global_info.colors[r] = 'red'
+        pivot = global_info.data_array[r]
         i = l - 1
         for j in range(l, r):
-            if global_info.data_array[j][0] < pivot:
+            if global_info.data_array[j] < pivot:
                 i = i + 1
-                global_info.data_array[j][1] = 'cyan'
+                global_info.colors[j] = 'cyan'
                 swap(global_info, i, j)
             else:
-                global_info.data_array[j][1] = 'yellow'
+                global_info.colors[j] = 'yellow'
             yield False
         yield True
         for j in range(l, r):
-            global_info.data_array[j][1] = 'white'
-        global_info.data_array[r][1] = 'green'
+            global_info.colors[j] = 'white'
+        global_info.colors[r] = 'green'
         swap(global_info, i+1, r)
         yield i+1
 
@@ -84,7 +85,7 @@ def quick_sort(global_info):
         yield True
 
     for i in range(0, global_info.data_size):
-        global_info.data_array[i][1] = 'green'
+        global_info.colors[i] = 'green'
         yield True
 
     global_info.sorted = True
@@ -100,11 +101,11 @@ def merge_sort(global_info):
         arr2 = []
         for i in range(0, n1):
             arr1.append(global_info.data_array[l + i])
-            global_info.data_array[l+i][1] = 'yellow'
+            global_info.colors[l+i] = 'yellow'
             yield False
         for i in range(0, n2):
             arr2.append(global_info.data_array[mid + i + 1])
-            global_info.data_array[mid + i + 1][1] = 'cyan'
+            global_info.colors[mid + i + 1] = 'cyan'
             yield False
 
         p1 = 0
@@ -112,29 +113,29 @@ def merge_sort(global_info):
         p = l
 
         while (p1 < n1 and p2 < n2):
-            if (arr1[p1][0] < arr2[p2][0]):
+            if (arr1[p1] < arr2[p2]):
                 global_info.data_array[p] = arr1[p1]
-                global_info.data_array[p][1] = 'grey'
+                global_info.colors[p] = 'grey'
                 yield False
                 p = p+1
                 p1 = p1+1
             else:
                 global_info.data_array[p] = arr2[p2]
-                global_info.data_array[p][1] = 'grey'
+                global_info.colors[p] = 'grey'
                 yield False
                 p = p+1
                 p2 = p2+1
 
         while (p1 < n1):
             global_info.data_array[p] = arr1[p1]
-            global_info.data_array[p][1] = 'grey'
+            global_info.colors[p]= 'grey'
             yield False
             p = p + 1
             p1 = p1+1
 
         while (p2 < n2):
             global_info.data_array[p] = arr2[p2]
-            global_info.data_array[p][1] = 'grey'
+            global_info.colors[p] = 'grey'
             yield False
             p = p+1
             p2 = p2+1
@@ -163,7 +164,7 @@ def merge_sort(global_info):
         yield True
 
     for i in range(0, global_info.data_size):
-        global_info.data_array[i][1] = 'green'
+        global_info.colors[i] = 'green'
         yield True
 
     global_info.sorted = True
@@ -173,17 +174,17 @@ def merge_sort(global_info):
 def selection_sort(global_info):
     for i in range(global_info.data_size):
         for j in range(i+1, global_info.data_size):
-            global_info.data_array[j][1] = 'white'
-        global_info.data_array[i][1] = 'yellow'
+            global_info.colors[j] = 'white'
+        global_info.colors[i] = 'yellow'
         min_idx = i
         for j in range(i+1, global_info.data_size):
-            if (global_info.data_array[min_idx][0] > global_info.data_array[j][0]):
+            if (global_info.data_array[min_idx] > global_info.data_array[j]):
                 min_idx = j
-                global_info.data_array[min_idx][1] = 'red'
+                global_info.colors[min_idx] = 'red'
             yield True
-            global_info.data_array[j][1] = 'grey'
-        global_info.data_array[i][1] = 'grey'
-        global_info.data_array[min_idx][1] = 'green'
+            global_info.colors[j] = 'grey'
+        global_info.colors[i] = 'grey'
+        global_info.colors[min_idx] = 'green'
         swap(global_info, i, min_idx)
         yield True
 
@@ -222,7 +223,7 @@ def radix_sort(global_info):
             global_info.data_array[i][0] = output[i]
             yield True
 
-    max1= -1
+    max1 = -1
     for i in global_info.data_array:
         max1 = max(max1, i[0])
 
