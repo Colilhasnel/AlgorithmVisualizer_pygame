@@ -8,13 +8,13 @@ I created this project to learn `pygame` and I wanted to create a Sorting Algori
 4. Each Algorithm has different visualization; the explanation of each visualization can be found on my website [colilhasnel.com](https://www.colilhasnel.com/)
 
 ### Requirements
-- You can run the command `pip install requirements.txt` in powershell. 
+- You can run the command `pip install -r requirements.txt` in powershell. 
 - The requirements are :
     - python3
     - pygame
 
 ### How to play
-- Run the `visualizer.py` as a python file
+- Run the `Visualizer.py` as a python file
 
 ### Adding new Algorithms
 1. Add a `select_algorithm_button` object in `Visualizer.py/algorithms_menu` function
@@ -23,11 +23,11 @@ I created this project to learn `pygame` and I wanted to create a Sorting Algori
     - "Algorithm Name" = This is what you think it is. It should be a string
     - display_algorithm.algorithm_function = This points to the actual visualization function in `display_algorithm.py` file
 2. Add a `algorithm_funciton` in `display_algorithm.py` file
-    - This should be a `<generator>` function. Read on more on [generator functions and objects here](https://www.geeksforgeeks.org/generators-in-python/)
+    - This should be a `<generator>` function. Read more on [generator functions and objects here](https://www.geeksforgeeks.org/generators-in-python/)
     - You should code the entire algorithm in this funciton
-    - Update `global_info.color` array whenever you the algorithm performs a swap
-        - Use your own creative to make better visualizations
-    - Add `global_info.draw_data(j)` to update that particular as per the color defined
+    - Update `global_info.color` array whenever the algorithm performs a swap
+        - Use your own creativity to make better visualizations
+    - Add `global_info.draw_data(j)` to update that particular index as per the color defined
         - If no `j` argument is passed, `global_info.draw_data()` will update the entire **Data**
     - add `yield` at appropriate places for `Pause` function to work
     - Refer `bubble_sort` function to understand how to add visualization on iterative algorithms
