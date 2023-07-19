@@ -19,6 +19,7 @@ class colors():
     GREEN = (0, 255, 0)
     YELLOW = (255, 255, 0)
     GREY = (175, 175, 175)
+    CYAN = (0,255,255)
 
 
 pygame.init()
@@ -156,8 +157,12 @@ def check_controls():
         GLOBAL_INFO.state = anime_state.PAUSE
     if GLOBAL_INFO.anime_controls[2].check_click():
         GLOBAL_INFO.state = anime_state.RESET
+    
+    for i in range(0,3):
+        GLOBAL_INFO.anime_controls[i].Draw(GLOBAL_INFO)
 
     for key, value in GLOBAL_INFO.algorithm_buttons.items():
+        value.select_button.Draw(GLOBAL_INFO)
         if value.check_click():
             GLOBAL_INFO.selection = key
             GLOBAL_INFO.algorithm = value.function
@@ -199,7 +204,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        pygame.display.update()
+        pygame.display.update() 
 
     pygame.quit()
 
