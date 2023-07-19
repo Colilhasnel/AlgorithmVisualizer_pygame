@@ -2,6 +2,24 @@ import pygame
 import random
 import buttons_class
 import display_algorithms
+from enum import Enum
+
+
+class anime_state(Enum):
+    PLAY = 1
+    PAUSE = 0
+    RESET = 2
+
+
+class colors():
+    BLACK = (0, 0, 0)
+    WHITE = (255, 255, 255)
+    RED = (255, 0, 0)
+    BLUE = (0, 0, 255)
+    GREEN = (0, 255, 0)
+    YELLOW = (255, 255, 0)
+    GREY = (175, 175, 175)
+
 
 pygame.init()
 
@@ -14,11 +32,13 @@ class global_information:
     fps = 120
     window_height = 550
     window_width = 1000
-    state = "Pause"
+    state = anime_state.RESET
     sorted = False
     selection = "Merge Sort"  # Algorithm text
     algorithm = None  # selected algorithm function
     algorithm_object = None  # generator object
+    anime_controls = []
+    algorithm_buttons = {}
 
     def __init__(self, data_len):
         self.window = pygame.display.set_mode((1000, 600), pygame.RESIZABLE)
@@ -36,8 +56,8 @@ class global_information:
             (2*len(self.data_array)-1)
         self.bar_gap = self.bar_width
         self.colors = []
-        for i in range(0,self.data_size):
-            self.colors.append('white')
+        for _ in range(0, self.data_size):
+            self.colors.append(colors.WHITE)
         self.sorted = False
 
     def draw_data(self, j=None):
@@ -56,102 +76,124 @@ class global_information:
             # y = self.window_height - self.margins - 450
             # rect = pygame.Rect(x,y,self.bar_width, 450)
             # pygame.draw.rect(self.window, 'black', rect)
+            y = self.window_height - MARGIN_TOP - 450
+            rect = pygame.Rect(x, y, self.bar_width, 450)
+            pygame.draw.rect(self.window, colors.BLACK, rect)
             y = self.window_height - MARGIN_TOP - element
             rect = pygame.Rect(x, y, self.bar_width, element)
             pygame.draw.rect(self.window, self.colors[index], rect)
         pygame.display.update()
 
+    def get_anime_rect(self):
+        x = MARGIN_LEFT
+        y = self.window_height - MARGIN_TOP - 450
+        width = self.window_width - MARGIN_LEFT - MARGIN_RIGHT
+        height = 450
+        rect = pygame.Rect(x, y, width, height)
+        return rect
+
     def random_gen(self, x, y):
         return random.randrange(x, y)
 
 
+GLOBAL_INFO = global_information(150)
+
+
 class select_algorithm_button:
-    def __init__(self, global_info, number, text, function_object):
+    def __init__(self, number, text, function_object):
         self.select_button = buttons_class.Button(
-            global_info, 0, number*36, text, False, True)
+            GLOBAL_INFO, 0, number*36, text, False, True)
         self.select_button.width = 200
         self.select_button.height = 36
         self.select_button.margin = 10
         self.select_button.button_rect = pygame.Rect(
             self.select_button.x_pos, self.select_button.y_pos, self.select_button.width, self.select_button.height)
         self.function = function_object
-        self.select_button.Draw(global_info)
+        self.select_button.Draw(GLOBAL_INFO)
 
     def check_click(self):
         return self.select_button.check_click()
 
 
-def static_screen(global_info):
-    menu_button = buttons_class.Button(global_info, 0, 1, "", False, True)
-    menu_button.button_rect = pygame.Rect(0, 1, 130, 34)
+def static_screen():
+    pygame.draw.rect(GLOBAL_INFO.window, colors.BLACK, pygame.Rect(
+        MARGIN_LEFT, 1, GLOBAL_INFO.window_width-MARGIN_LEFT, 34))
+    pygame.draw.rect(GLOBAL_INFO.window, colors.WHITE,
+                     pygame.Rect(MARGIN_LEFT, 1, GLOBAL_INFO.window_width - MARGIN_LEFT, 34), 2, 10)
+    heading = GLOBAL_INFO.font1.render(
+        "Selected Algorithm : " + GLOBAL_INFO.selection, True, colors.WHITE)
+    GLOBAL_INFO.window.blit(heading, (370, 9))
 
-    pygame.draw.rect(global_info.window, 'white',
-                     pygame.Rect(MARGIN_LEFT, 1, global_info.window_width - MARGIN_LEFT, 34), 2, 10)
-    heading = global_info.font1.render(
-        "Selected Algorithm : " + global_info.selection, True, 'white')
-    global_info.window.blit(heading, (370, 9))
-
-    algorithms_menu(global_info)
-
-    play_button = buttons_class.Button(
-        global_info, 410, 550, "Play", True, True)
-    pause_button = buttons_class.Button(
-        global_info, 457, 550, "Pause", True, True)
-    reset_button = buttons_class.Button(
-        global_info, 520, 550, "Reset", True, True)
-
-    if play_button.check_click():
-        global_info.state = "Play"
-    if pause_button.check_click():
-        global_info.state = "Pause"
-    if reset_button.check_click():
-        global_info.state = "Reset"
+    GLOBAL_INFO.anime_controls.append(buttons_class.Button(
+        GLOBAL_INFO, 410, 550, "Play", True, True))
+    GLOBAL_INFO.anime_controls.append(buttons_class.Button(
+        GLOBAL_INFO, 457, 550, "Pause", True, True))
+    GLOBAL_INFO.anime_controls.append(buttons_class.Button(
+        GLOBAL_INFO, 520, 550, "Reset", True, True))
 
 
-def algorithms_menu(global_info):
+def algorithms_menu():
 
-    algorithm_buttons = {}
+    GLOBAL_INFO.algorithm_buttons["Bubble Sort"] = select_algorithm_button(
+        0, "Bubble Sort", display_algorithms.bubble_sort)
+    GLOBAL_INFO.algorithm_buttons["Insertion Sort"] = select_algorithm_button(
+        1, "Insertion Sort", display_algorithms.insertion_sort)
+    GLOBAL_INFO.algorithm_buttons["Merge Sort"] = select_algorithm_button(
+        2, "Merge Sort", display_algorithms.merge_sort)
+    GLOBAL_INFO.algorithm_buttons["Quick Sort"] = select_algorithm_button(
+        3, "Quick Sort", display_algorithms.quick_sort)
+    GLOBAL_INFO.algorithm_buttons["Selection Sort"] = select_algorithm_button(
+        4, "Selection Sort", display_algorithms.selection_sort)
+    GLOBAL_INFO.algorithm_buttons["Radix Sort"] = select_algorithm_button(
+        5, "Radix Sort", display_algorithms.radix_sort)
 
-    algorithm_buttons["Bubble Sort"] = select_algorithm_button(
-        global_info, 0, "Bubble Sort", display_algorithms.bubble_sort)
-    algorithm_buttons["Insertion Sort"] = select_algorithm_button(
-        global_info, 1, "Insertion Sort", display_algorithms.insertion_sort)
-    algorithm_buttons["Merge Sort"] = select_algorithm_button(
-        global_info, 2, "Merge Sort", display_algorithms.merge_sort)
-    algorithm_buttons["Quick Sort"] = select_algorithm_button(
-        global_info, 3, "Quick Sort", display_algorithms.quick_sort)
-    algorithm_buttons["Selection Sort"] = select_algorithm_button(
-        global_info, 4, "Selection Sort", display_algorithms.selection_sort)
-    algorithm_buttons["Radix Sort"] = select_algorithm_button(
-        global_info, 5, "Radix Sort", display_algorithms.radix_sort)
 
-    for key, value in algorithm_buttons.items():
+def check_controls():
+
+    if GLOBAL_INFO.anime_controls[0].check_click():
+        GLOBAL_INFO.state = anime_state.PLAY
+    if GLOBAL_INFO.anime_controls[1].check_click():
+        GLOBAL_INFO.state = anime_state.PAUSE
+    if GLOBAL_INFO.anime_controls[2].check_click():
+        GLOBAL_INFO.state = anime_state.RESET
+
+    for key, value in GLOBAL_INFO.algorithm_buttons.items():
         if value.check_click():
-            global_info.selection = key
-            global_info.algorithm = value.function
-            global_info.state = "Reset"
+            GLOBAL_INFO.selection = key
+            GLOBAL_INFO.algorithm = value.function
+            GLOBAL_INFO.state = anime_state.RESET
+            pygame.draw.rect(GLOBAL_INFO.window, colors.BLACK, pygame.Rect(
+                MARGIN_LEFT, 1, GLOBAL_INFO.window_width-MARGIN_LEFT, 34))
+            pygame.draw.rect(GLOBAL_INFO.window, colors.WHITE,
+                             pygame.Rect(MARGIN_LEFT, 1, GLOBAL_INFO.window_width - MARGIN_LEFT, 34), 2, 10)
+            heading = GLOBAL_INFO.font1.render(
+                "Selected Algorithm : " + GLOBAL_INFO.selection, True, colors.WHITE)
+            GLOBAL_INFO.window.blit(heading, (370, 9))
 
 
 def main():
 
-    global_info = global_information(150)
     running = True
-    global_info.algorithm = display_algorithms.merge_sort
-    global_info.algorithm_object = global_info.algorithm(global_info)
+    GLOBAL_INFO.algorithm = display_algorithms.merge_sort
+    GLOBAL_INFO.algorithm_object = GLOBAL_INFO.algorithm(GLOBAL_INFO)
+    static_screen()
+    algorithms_menu()
     while running:
-        global_info.window.fill('black')
-        global_info.timer.tick(global_info.fps)
+        GLOBAL_INFO.timer.tick(GLOBAL_INFO.fps)
 
-        static_screen(global_info)
+        check_controls()
 
-        global_info.draw_data()
-        if global_info.state == "Reset":
-            global_info.generate_list()
-            global_info.algorithm_object = global_info.algorithm(
-                global_info)
-            global_info.state = "Pause"
-        if global_info.state == "Play" and not global_info.sorted:
-            next(global_info.algorithm_object)
+        if GLOBAL_INFO.state == anime_state.PAUSE:
+            pygame.draw.rect(GLOBAL_INFO.window, colors.BLACK,
+                             GLOBAL_INFO.get_anime_rect())
+            GLOBAL_INFO.draw_data()
+        if GLOBAL_INFO.state == anime_state.RESET:
+            GLOBAL_INFO.generate_list()
+            GLOBAL_INFO.algorithm_object = GLOBAL_INFO.algorithm(
+                GLOBAL_INFO)
+            GLOBAL_INFO.state = anime_state.PAUSE
+        if GLOBAL_INFO.state == anime_state.PLAY and not GLOBAL_INFO.sorted:
+            next(GLOBAL_INFO.algorithm_object)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

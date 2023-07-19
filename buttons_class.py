@@ -1,6 +1,5 @@
 import pygame
 
-
 class Button:
     def __init__(self, global_info, x_pos, y_pos, text, draw_self, enabled):
         self.x_pos = x_pos

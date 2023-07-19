@@ -1,3 +1,6 @@
+from Visualizer import colors
+
+
 def swap(global_info, x, y):
     global_info.data_array[x], global_info.data_array[y] = global_info.data_array[y], global_info.data_array[x]
     global_info.colors[x], global_info.colors[y] = global_info.colors[y], global_info.colors[x]
@@ -7,18 +10,27 @@ def bubble_sort(global_info):
     n = global_info.data_size
     for i in range(0, n-1):
         for j in range(0, n-i-1):
-            global_info.colors[j] = 'red'
+            global_info.colors[j] = colors.RED
+            global_info.draw_data(j)
             # global_info.draw_data(j)
             if (global_info.data_array[j] > global_info.data_array[j+1]):
                 swap(global_info, j, j+1)
-                global_info.colors[j] = 'grey'
+                global_info.colors[j] = colors.GREY
+                global_info.draw_data(j)
+                global_info.draw_data(j+1)
             else:
-                global_info.colors[j] = 'yellow'
+                global_info.colors[j] = colors.YELLOW
+                global_info.colors[j+1] = colors.RED
+                global_info.draw_data(j)
+                global_info.draw_data(j+1)
             yield True
         for j in range(0, n-i-1):
-            global_info.colors[j] = 'white'
-        global_info.colors[n-i-1] = 'green'
-    global_info.colors[0] = 'green'
+            global_info.colors[j] = colors.WHITE
+        global_info.draw_data()
+        global_info.colors[n-i-1] = colors.GREEN
+        global_info.draw_data(n-i-1)
+    global_info.colors[0] = colors.GREEN
+    global_info.draw_data(0)
     global_info.sorted = True
     yield True
 
@@ -102,10 +114,12 @@ def merge_sort(global_info):
         for i in range(0, n1):
             arr1.append(global_info.data_array[l + i])
             global_info.colors[l+i] = 'yellow'
+            global_info.draw_data(l+i)
             yield False
         for i in range(0, n2):
             arr2.append(global_info.data_array[mid + i + 1])
             global_info.colors[mid + i + 1] = 'cyan'
+            global_info.draw_data(mid+i+1)
             yield False
 
         p1 = 0
@@ -128,7 +142,7 @@ def merge_sort(global_info):
 
         while (p1 < n1):
             global_info.data_array[p] = arr1[p1]
-            global_info.colors[p]= 'grey'
+            global_info.colors[p] = 'grey'
             yield False
             p = p + 1
             p1 = p1+1
