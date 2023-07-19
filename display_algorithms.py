@@ -128,7 +128,7 @@ def merge_sort(global_info):
             yield False
         for i in range(0, n2):
             arr2.append(global_info.data_array[mid + i + 1])
-            global_info.colors[mid + i + 1] = 'cyan'
+            global_info.colors[mid + i + 1] = colors.CYAN
             global_info.draw_data(mid+i+1)
             yield False
 
@@ -140,12 +140,14 @@ def merge_sort(global_info):
             if (arr1[p1] < arr2[p2]):
                 global_info.data_array[p] = arr1[p1]
                 global_info.colors[p] = colors.GREY
+                global_info.draw_data(p)
                 yield False
                 p = p+1
                 p1 = p1+1
             else:
                 global_info.data_array[p] = arr2[p2]
                 global_info.colors[p] = colors.GREY
+                global_info.data_array(p)
                 yield False
                 p = p+1
                 p2 = p2+1
