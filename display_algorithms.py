@@ -147,7 +147,7 @@ def merge_sort(global_info):
             else:
                 global_info.data_array[p] = arr2[p2]
                 global_info.colors[p] = colors.GREY
-                global_info.data_array(p)
+                global_info.draw_data(p)
                 yield False
                 p = p+1
                 p2 = p2+1
@@ -155,6 +155,7 @@ def merge_sort(global_info):
         while (p1 < n1):
             global_info.data_array[p] = arr1[p1]
             global_info.colors[p] = colors.GREY
+            global_info.draw_data(p)
             yield False
             p = p + 1
             p1 = p1+1
@@ -162,6 +163,7 @@ def merge_sort(global_info):
         while (p2 < n2):
             global_info.data_array[p] = arr2[p2]
             global_info.colors[p] = colors.GREY
+            global_info.draw_data(p)
             yield False
             p = p+1
             p2 = p2+1
@@ -191,6 +193,7 @@ def merge_sort(global_info):
 
     for i in range(0, global_info.data_size):
         global_info.colors[i] = colors.GREEN
+        global_info.draw_data(i)
         yield True
 
     global_info.sorted = True

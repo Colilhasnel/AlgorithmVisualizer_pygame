@@ -18,8 +18,9 @@ class colors():
     BLUE = (0, 0, 255)
     GREEN = (0, 255, 0)
     YELLOW = (255, 255, 0)
-    GREY = (175, 175, 175)
+    GREY = (200, 200, 200)
     CYAN = (0,255,255)
+    ORANGE = (255,165,0)
 
 
 pygame.init()
