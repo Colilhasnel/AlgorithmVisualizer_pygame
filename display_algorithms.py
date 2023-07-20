@@ -204,16 +204,22 @@ def selection_sort(global_info):
     for i in range(global_info.data_size):
         for j in range(i+1, global_info.data_size):
             global_info.colors[j] = colors.WHITE
+            global_info.draw_data(j)
         global_info.colors[i] = colors.YELLOW
+        global_info.draw_data(i)
         min_idx = i
         for j in range(i+1, global_info.data_size):
             if (global_info.data_array[min_idx] > global_info.data_array[j]):
                 min_idx = j
                 global_info.colors[min_idx] = colors.RED
+                global_info.draw_data(min_idx)
             yield True
             global_info.colors[j] = colors.GREY
+            global_info.draw_data(j)
         global_info.colors[i] = colors.GREY
         global_info.colors[min_idx] = colors.GREEN
+        global_info.draw_data(i)
+        global_info.draw_data(min_idx)
         swap(global_info, i, min_idx)
         yield True
 
